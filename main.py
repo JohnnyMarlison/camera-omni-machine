@@ -12,6 +12,26 @@ import threading
 
 TCP_PORT_SERIAL = 9000
 
+def barcodeReader(image, bgr):
+    gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    barcodes = decode(gray_img)
+
+    for decodedObject in barcodes:
+        points = decodedObject.polygon
+        global pts
+
+        pts = np.array(points, np.int32)
+        pts = pts.reshape((-1, 1, 2))
+        print(np.take(pts,([0, 0])))
+        print(np.take(pts,([4, 4])))
+        cv2.polylines(image, [pts], True, (0, 0, 255), 3)
+
+    for bc in barcodes:
+        cv2.putText(frame, bc.data.decode("utf-8") + " - " + bc.type, (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1,
+                    bgr, 2)
+
+        return "Barcode: {} - Type: {}".format(bc.data.decode("utf-8"), bc.type)
+
 def get_name_usb():
 	dev = Popen("ls /dev/ttyU* 2>/dev/null", shell=True, stdin=PIPE, stdout=PIPE).stdout.read().split()
 	if (not len(dev)):
@@ -22,17 +42,17 @@ def get_name_usb():
 	return dev
 
 def readall(sock):
-	message = ''
+	message = []
 	b = 0
 	while 1:
-		b = sock.recv(1).decode()
-		if b == '\0':
+		b = sock.recv(1)
+		if b == 0:
 			break
-		message += b
+		message.append(b)
 	return message
 
 def send_to_serial(sock, message):
-	message += '\n\0'
+	message += ' \n\0'
 	sock.send(message.encode())
 
 def serial_thread():
@@ -56,7 +76,7 @@ def video_thread():
 	sock.connect(('127.0.0.1', TCP_PORT_SERIAL))
 
 	pts = 0
-	value = True
+	value = -1
 	bgr = (0, 255, 0)
 	frame_rate = 30
 	camera = PiCamera()
@@ -73,7 +93,7 @@ def video_thread():
 	R_y2 = 480
 
 	x1 = int(np.take(pts,([0])))
-	x2 = int(np.take(pts,([4])))
+	x2 = int(np.take(pts,([0])))
 
 	for frame1 in camera.capture_continuous(rawCapture, format = "bgr", use_video_port = True):   
 		frame = frame1.array
@@ -87,6 +107,7 @@ def video_thread():
 
 		if value == -1:
 			send_to_serial(sock, 'R 1')
+			print("VALUE")
 
 		if barcode == "Barcode: Step_1 - Type: QRCODE":
 			send_to_serial(sock, 'L 0 0')
