@@ -144,16 +144,22 @@ def video_thread():
 			print('SEARCH')
 			
 			if len(pts):
+				send_to_serial(sock, 'L 0 0')
 				curr_state = State.GO_TO_QR
 
 		elif curr_state == State.GO_TO_QR:
-			command = math_block(pts) # command - string 
-			send_to_serial(sock, 'L ' + command)
-			
-			if barcodeReader(image, bgr) != 'Nan':
-				curr_state = State.SCAN_QR
+			print('GO_TO_QR')
+			if len(pts):
+				command = math_block(pts)
+				send_to_serial(sock, 'L ' + command)
+				
+				bcr = barcodeReader(image, bgr)
+				print(bcr)
+				if bcr != 'Nan':
+					curr_state = State.SCAN_QR
 		
 		elif curr_state == State.SCAN_QR:
+			print('SCAN')
 			send_to_serial(sock, 'L 0 0')
 			bc = barcodeReader(image, bgr)
 			if len(bc) != 0:
@@ -162,6 +168,7 @@ def video_thread():
 
 
 		elif curr_state == State.SEARCH_NEW_QR:
+			print('SERACH_NEW')
 			send_to_serial(sock, 'R 0')
 			if len(pts) != 0:
 				bc = barcodeReader(image, bgr)
