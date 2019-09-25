@@ -42,18 +42,19 @@ def get_name_usb():
 	return dev
 
 def readall(sock):
-	message = []
-	b = 0
+	message = ''
+	b = -1
 	while 1:
-		b = sock.recv(1)
-		if b == 0:
+		b = sock.recv(1).decode()
+		if b == 'E':
 			break
-		message.append(b)
+		message += b
 	return message
 
 def send_to_serial(sock, message):
-	message += ' \n\0'
+	message += ' \nE'
 	sock.send(message.encode())
+	print('Sending')
 
 def serial_thread():
 	while (not len(get_name_usb())):
@@ -66,9 +67,11 @@ def serial_thread():
 	sock.bind(('', TCP_PORT_SERIAL))
 	sock.listen(1)
 	conn, addr = sock.accept()
-	print('Video connected')
+	print('Video connected {}'.format(addr))
 	while 1:
-		ser.write(readall(conn))
+		m = readall(conn)
+		print('Current command to serial: {}'.format(m))
+		ser.write(m.encode())
 
 def video_thread():
 	time.sleep(2)
@@ -106,7 +109,7 @@ def video_thread():
 		print(barcode)
 
 		if value == -1:
-			send_to_serial(sock, 'R 1')
+			send_to_serial(sock, 'R 0')
 			print("VALUE")
 
 		if barcode == "Barcode: Step_1 - Type: QRCODE":
@@ -144,6 +147,7 @@ def video_thread():
 		code = cv2.waitKey(10)
 		if code == ord('q'):
 			break
+		time.sleep(1)
 
 
 thread1 = threading.Thread(target=serial_thread, args=())
