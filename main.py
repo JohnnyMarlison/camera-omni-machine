@@ -46,7 +46,7 @@ def barcodeSearcher(image, bgr):
         pts = np.array(points, np.int32)
         pts = pts.reshape((-1, 1, 2))
     
-        cv2.polylines(image, [pts], True, (0, 0, 255), 3)
+        #cv2.polylines(image, [pts], True, (0, 0, 255), 3)
 
         return pts
 
@@ -61,8 +61,8 @@ def barcodeReader(image, bgr):
     #     cv2.polylines(image, [pts], True, (0, 0, 255), 3)
     
     for bc in barcodes:
-        cv2.putText(frame, bc.data.decode("utf-8") + " - " + bc.type, (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1,
-                    bgr, 2)
+        #cv2.putText(frame, bc.data.decode("utf-8") + " - " + bc.type, (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1,
+        #           bgr, 2)
 
         return "Barcode: {} - Type: {}".format(bc.data.decode("utf-8"), bc.type)
 
@@ -206,7 +206,7 @@ def video_thread():
 		# 	if barcode == "Barcode: Step_3 - Type: QRCODE":
 		# 		print("PING PING PING")
 
-		cv2.imshow('Barcode reader', image)
+		#cv2.imshow('Barcode reader', image)
 		rawCapture.truncate(0)
 
 
