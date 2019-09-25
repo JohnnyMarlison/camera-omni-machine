@@ -12,10 +12,18 @@ import threading
 
 TCP_PORT_SERIAL = 9000
 frame = 0
-#class Class_numpy:
-#	pts = np.object
-#	def __init__ (self):
-#		self.
+
+def my_map(x, in_min, in_max, out_min, out_max)
+    return (x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
+
+def math_block(pts):
+    mid_x = (np.take(pts, ([4])) - np.take(pts, ([0]))) // 2 + np.take(pts, ([0]))
+    mid_y = (np.take(pts, ([5])) - np.take(pts, ([1]))) // 2 + np.take(pts, ([1]))
+    vec_a = 320 - mid_x 
+    vec_b = 480 - mid_y
+    my_map(vec_a, -320, 320, -255, 255)
+    my_map(vec_b, -240, 240, -255, 255)
+    return '{} {}'.format(vec_a, vec_b)
 
 def barcodeReader(image, bgr):
     gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -118,8 +126,10 @@ def video_thread():
 
 
 		if len(pts):
-			x1 = np.take(pts,([0]))
-			x2 = np.take(pts,([4]))
+			# x1 = np.take(pts,([0]))
+			# x2 = np.take(pts,([4]))
+
+			command = math_block(pts) # command - string type Ex. send_to_serial(sock, 'L ' + command)
 
 			if barcode == "Barcode: Step_1 - Type: QRCODE":
 				print("PING PING PING")
