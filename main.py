@@ -29,6 +29,7 @@ def barcodeReader(image, bgr):
 
         pts = np.array(points, np.int32)
         pts = pts.reshape((-1, 1, 2))
+	print(pts)
         print(np.take(pts,([0])))
         print(np.take(pts,([4])))
         cv2.polylines(image, [pts], True, (0, 0, 255), 3)
@@ -110,36 +111,35 @@ def video_thread():
 
 		barcode, pts = barcodeReader(image, bgr)
 		print(barcode)
-		if len(pts):
-			x1 = np.take(pts,([0]))
-			x2 = np.take(pts,([4]))
 
 		if value == -1:
 			send_to_serial(sock, 'R 0')
 			print("Step_0")
 
-		if barcode == "Barcode: Step_1 - Type: QRCODE":
-			send_to_serial(sock, 'L 0 0')
-			send_to_serial(sock, 'L 0 255')
-			print("Step_1_0")
-			value = 0
 
+		if len(pts):
+			x1 = np.take(pts,([0]))
+			x2 = np.take(pts,([4]))
 
-		#if (x1 < L_x1 and x2 < R_x1 and barcode == "Barcode: Step_1 - Type: QRCODE"):
-			#print("Step_1_1")
+			if barcode == "Barcode: Step_1 - Type: QRCODE":
+				print("PING PING PING")
+				send_to_serial(sock, 'L 0 0')
+				send_to_serial(sock, 'L 0 255')
+				print("Step_1_0")
+				value = 0
 
-			#send_to_serial(sock, 'L 0 0')
-			#value = 1
-			#send_to_serial(sock, 'L 0 255')
-
-		#if barcode == "Barcode: Step_2 - Type: QRCODE":
-	   		#print("Step_2_0")
-
-	   		#send_to_serial(sock, 'R 1')
-	   		#time.sleep(1)
-
-		if barcode == "Barcode: Step_3 - Type: QRCODE":
-			print("PING PING PING")
+			if (x1 < L_x1 and x2 > R_x1 and barcode == "Barcode: Step_1 - Type: QRCODE"):
+				send_to_serial(sock, 'L 0 0')
+				send_to_serial(sock, 'L 0 255')
+				print("Step_1_1")
+				value = 1
+	
+			if barcode == "Barcode: Step_2 - Type: QRCODE":
+				send_to_serial(sock, 'R 1')
+				print("Step_2_0")
+	
+			if barcode == "Barcode: Step_3 - Type: QRCODE":
+				print("PING PING PING")
 
 		#cv2.imshow('Barcode reader', image)
 		rawCapture.truncate(0)
