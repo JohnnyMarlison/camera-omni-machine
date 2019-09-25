@@ -13,7 +13,7 @@ import threading
 TCP_PORT_SERIAL = 9000
 frame = 0
 
-def my_map(x, in_min, in_max, out_min, out_max)
+def my_map(x, in_min, in_max, out_min, out_max):
     return (x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
 
 def math_block(pts):
@@ -25,28 +25,36 @@ def math_block(pts):
     my_map(vec_b, -240, 240, -255, 255)
     return '{} {}'.format(vec_a, vec_b)
 
-def barcodeReader(image, bgr):
+def barcodeSearcher(image, bgr):
     gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     barcodes = decode(gray_img)
     pts = np.array([])
+
     if len(barcodes) == 0:
-        return "NAN", pts
+        return pts
 
     for decodedObject in barcodes:
         points = decodedObject.polygon
 
         pts = np.array(points, np.int32)
         pts = pts.reshape((-1, 1, 2))
-	print(pts)
-        print(np.take(pts,([0])))
-        print(np.take(pts,([4])))
+    
         cv2.polylines(image, [pts], True, (0, 0, 255), 3)
+
+        return pts
+
+def barcodeReader(image, bgr):
+    gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    barcodes = decode(gray_img)
+
+    # for decodedObject in barcodes:
+    #     cv2.polylines(image, [pts], True, (0, 0, 255), 3)
     
     for bc in barcodes:
         cv2.putText(frame, bc.data.decode("utf-8") + " - " + bc.type, (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1,
                     bgr, 2)
 
-        return ("Barcode: {} - Type: {}".format(bc.data.decode("utf-8"), bc.type)), (pts)
+        return "Barcode: {} - Type: {}".format(bc.data.decode("utf-8"), bc.type)
 
 def get_name_usb():
 	dev = Popen("ls /dev/ttyU* 2>/dev/null", shell=True, stdin=PIPE, stdout=PIPE).stdout.read().split()
@@ -117,8 +125,7 @@ def video_thread():
 		line1 = cv2.line(image, (L_x1, L_y1), (L_x1, L_y2), (0, 255, 0), 3)
 		line2 = cv2.line(image, (R_x1, L_y1), (R_x1, R_y2), (0, 255, 0), 3)
 
-		barcode, pts = barcodeReader(image, bgr)
-		print(barcode)
+		pts = barcodeSearcher(image, bgr)
 
 		if value == -1:
 			send_to_serial(sock, 'R 0')
