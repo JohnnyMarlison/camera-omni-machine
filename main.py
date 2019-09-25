@@ -30,7 +30,7 @@ def math_block(pts):
     vec_b = 480 - mid_y
     my_map(vec_a, -320, 320, -255, 255)
     my_map(vec_b, -240, 240, -255, 255)
-    return '{} {}'.format(vec_a, vec_b)
+    return '{} {}'.format(str(vec_a), str(vec_b))
 
 def barcodeSearcher(image, bgr):
     gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
