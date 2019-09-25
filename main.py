@@ -134,8 +134,8 @@ def video_thread():
 		frame = frame1.array
 		image = frame1.array
 
-		line1 = cv2.line(image, (L_x1, L_y1), (L_x1, L_y2), (0, 255, 0), 3)
-		line2 = cv2.line(image, (R_x1, L_y1), (R_x1, R_y2), (0, 255, 0), 3)
+		#line1 = cv2.line(image, (L_x1, L_y1), (L_x1, L_y2), (0, 255, 0), 3)
+		#line2 = cv2.line(image, (R_x1, L_y1), (R_x1, R_y2), (0, 255, 0), 3)
 
 		pts = barcodeSearcher(image, bgr)
 
@@ -206,7 +206,7 @@ def video_thread():
 		# 	if barcode == "Barcode: Step_3 - Type: QRCODE":
 		# 		print("PING PING PING")
 
-		#cv2.imshow('Barcode reader', image)
+		cv2.imshow('Barcode reader', image)
 		rawCapture.truncate(0)
 
 
