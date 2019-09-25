@@ -2,6 +2,7 @@ from pyzbar.pyzbar import decode
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 from subprocess import Popen, PIPE
+from enum import Enum
 import cv2
 import numpy as np
 import time
@@ -12,6 +13,12 @@ import threading
 
 TCP_PORT_SERIAL = 9000
 frame = 0
+
+class State(Enum):
+	SEARCH_QR = 1
+	GO_TO_QR = 2
+	SCAN_QR = 3
+
 
 def my_map(x, in_min, in_max, out_min, out_max):
     return (x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
