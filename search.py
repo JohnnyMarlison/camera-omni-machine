@@ -4,13 +4,12 @@ import numpy as np
 import sys
 import time
 
-pts = 0
 
 def barcodeReader(image, bgr):
     gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     barcodes = decode(gray_img)
     pts = np.array([])
-    global pts
+  #  global pts
     if len(barcodes) == 0:
         return "NAN", pts
 
@@ -29,6 +28,7 @@ while True:
     _, frame = cap.read()
     #image = cap.read()
     barcode = barcodeReader(frame, bgr)
+    print(barcode)
 
     cv2.imshow('Barcode reader', frame)
 
