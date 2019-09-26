@@ -4,6 +4,7 @@ import time
 import cv2
 import numpy
 import re
+import socket
 
 TCP_PORT_VIDEO = 9000
 sock_video = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

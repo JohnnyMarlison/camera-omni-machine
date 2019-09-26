@@ -15,7 +15,7 @@ def recvall(sock, count):
 
 
 def video_thread():
-	TCP_IP = '192.168.0.20'
+	TCP_IP = '192.168.1.129'
 	TCP_PORT_VIDEO = 9000
 
 	sock_video = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
