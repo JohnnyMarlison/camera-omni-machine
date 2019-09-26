@@ -23,9 +23,12 @@ class State(Enum):
 def my_map(x, in_min, in_max, out_min, out_max):
     return (x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
 
+def get_pts_value(pts, ind):
+    return np.take(pts, ([ind])).item()
+
 def math_block(pts):
-    mid_x = (np.take(pts, ([4])) - np.take(pts, ([0]))) // 2 + np.take(pts, ([0]))
-    mid_y = (np.take(pts, ([5])) - np.take(pts, ([1]))) // 2 + np.take(pts, ([1]))
+    mid_x = (get_pts_value(pts, 4) - get_pts_value(pts, 0)) // 2 + get_pts_value(pts, 0)
+    mid_y = (get_pts_value(pts, 5) - get_pts_value(pts, 1)) // 2 + get_pts_value(pts, 1)
     vec_a = 320 - mid_x 
     vec_b = 480 - mid_y
     my_map(vec_a, -320, 320, -255, 255)
