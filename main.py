@@ -31,8 +31,8 @@ def math_block(pts):
     mid_y = (get_pts_value(pts, 5) - get_pts_value(pts, 1)) // 2 + get_pts_value(pts, 1)
     vec_a = 320 - mid_x 
     vec_b = 480 - mid_y
-    my_map(vec_a, -320, 320, -255, 255)
-    my_map(vec_b, -240, 240, -255, 255)
+    vec_a = my_map(vec_a, -320, 320, -255, 255)
+    vec_b = my_map(vec_b, -240, 240, -255, 255)
     return '{} {}'.format(str(vec_a), str(vec_b))
 
 def barcodeSearcher(image, bgr):
