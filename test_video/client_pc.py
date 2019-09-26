@@ -2,6 +2,7 @@ import cv2
 import time
 import numpy
 import socket
+import os
 
 def recvall(sock, count):
     buf = b''
@@ -15,7 +16,7 @@ def recvall(sock, count):
 
 
 def video_thread():
-	TCP_IP = '192.168.1.129'
+	TCP_IP = os.argv[1]
 	TCP_PORT_VIDEO = 9000
 
 	sock_video = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
