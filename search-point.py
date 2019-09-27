@@ -6,6 +6,7 @@ import time
 
 cap = cv2.VideoCapture(0)
 
+
 while True:
 	ret, frame = cap.read()
 
@@ -17,10 +18,27 @@ while True:
 	#print(contours)
 
 	for c in contours:
-		cv2.drawContours(thresh_img, [c], -1, (0, 0, 255), 3)
+		cv2.drawContours(frame, [c], -1, (0, 255, 0), 1)
 
 
-	cv2.imshow('Search', thresh_img)
+	x = 0
+	y = 0
+
+	for i in range(2, frame.shape[0] - 2):
+		for j in range(2, frame.shape[1] - 2):
+			if (frame[i, j, 0] == 0 and frame[i, j, 1] == 255):
+				x = i
+				y = j
+				break
+			j += 6
+		i += 6
+
+	frame[x-10:x+10, y-10:y+10] = (0, 0, 255)
+
+	print('{} {}'.format(x, y))
+
+	# cv2.imshow('Search', thresh_img)
+	cv2.imshow('Original', frame)
 
 	code = cv2.waitKey(10)
 	if code == ord('q'):
