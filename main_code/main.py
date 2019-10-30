@@ -96,7 +96,7 @@ def video_thread():
 		elif curr_state == State.SEARCH_NEW_QR:
 			print('SERACH_NEW')
 			send_to_serial(sock, 'R 0')
-			if len(pts) != 0:
+			if res:
 				time.sleep(2)
 				bc = barcodeReader(image, bgr)
 				if not (bc in barcode_base):
